@@ -12,6 +12,7 @@
 	<script src="https://unpkg.com/babel-standalone@6.26.0/babel.js"></script>
 	<script type="text/babel">
 		 const rootElement = document.getElementById('root') 
+
 		 // dom way 
 		 // const element = document.createElement('div') 
 		 // element.textContent = 'Hello World' 
@@ -24,13 +25,13 @@
 		 // 'Hello World' 
 		 // )
 
-		 const content = 'Hello World' 
-		 const myClassName = 'container' 
-		 const props = { 
-		 	className: 'container',
-			children: 'Hello World'
-		 }
-		 const element = <div {...props}>Hi There</div>
+		 const Message = (props) => <div>{props.msg}</div>
+		 const element = (
+		 	<div className="container">
+			 <Message msg='Hello World' />
+			 <Message msg='Goodbye World' />
+			</div>
+		 )
 		 ReactDOM.render(element, rootElement)
 	</script>
 </body>
