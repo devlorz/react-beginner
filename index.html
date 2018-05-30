@@ -9,8 +9,9 @@
 	<div id="root"></div>
 	<script src="https://unpkg.com/react@16.3.0/umd/react.development.js"></script>
 	<script src="https://unpkg.com/react-dom@16.3.0/umd/react-dom.development.js"></script>
+	<script src="https://unpkg.com/prop-types@15.6.0/index.js"></script>
 	<script src="https://unpkg.com/babel-standalone@6.26.0/babel.js"></script>
-	<script type="text/babel">
+	<!-- <script type="text/babel">
 		 const rootElement = document.getElementById('root') 
 
 		 // dom way 
@@ -33,6 +34,24 @@
 			</div>
 		 )
 		 ReactDOM.render(element, rootElement)
+	</script> -->
+	<script type="text/babel">
+		class SayHello extends React.component {
+		 static propTypes = { firstName: PropTypes.string.isRequired, lastName: PropTypes.string.isRequired, }
+		 render() {
+		 	const {firstName, lastName} = this.props;
+			return (
+				<div>
+					Hello {props.firstName} {props.lastName} !
+				</div>
+			)
+			}
+		}
+
+		ReactDOM.render(
+			<SayHello firstName={'test'} lastName={'test'} />,
+			document.getElementById('root')
+		)
 	</script>
 </body>
 
