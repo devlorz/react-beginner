@@ -11,45 +11,21 @@
 	<script src="https://unpkg.com/react-dom@16.3.0/umd/react-dom.development.js"></script>
 	<script src="https://unpkg.com/prop-types@15.6/prop-types.js"></script>
 	<script src="https://unpkg.com/babel-standalone@6.26.0/babel.js"></script>
-	<!-- <script type="text/babel">
-		 const rootElement = document.getElementById('root') 
-
-		 // dom way 
-		 // const element = document.createElement('div') 
-		 // element.textContent = 'Hello World' 
-		 // element.className = 'container' 
-		 // rootElement.appendChild(element)
-
-		 // create element way 
-		 // const element = React.createElement( 
-		 // 'div', // {className: 'container'}, 
-		 // 'Hello World' 
-		 // )
-
-		 const Message = (props) => <div>{props.msg}</div>
-		 const element = (
-		 	<div className="container">
-			 <Message msg='Hello World' />
-			 <Message msg='Goodbye World' />
-			</div>
-		 )
-		 ReactDOM.render(element, rootElement)
-	</script> -->
 	<script type="text/babel">
-		class SayHello extends React.Component {
-		 static propTypes = { firstName: PropTypes.string.isRequired, lastName: PropTypes.string.isRequired, }
-		 render() {
-		 	const {firstName, lastName} = this.props;
+		function Message({ message }) {
 			return (
 				<div>
-					Hello {firstName} {lastName} !
+					{ message ? (
+						<div>{ message }</div>
+					) : (
+						<div>No message</div>
+					)}
 				</div>
 			)
-			}
 		}
 
 		ReactDOM.render(
-			<SayHello firstName={'test'} lastName={'test'} />,
+			<Message message={null}/>,
 			document.getElementById('root')
 		)
 	</script>
