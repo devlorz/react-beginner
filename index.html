@@ -12,118 +12,77 @@
 	<script src="https://unpkg.com/prop-types@15.6/prop-types.js"></script>
 	<script src="https://unpkg.com/babel-standalone@6.26.0/babel.js"></script>
 	<script type="text/babel">
-		class App extends React.Component {
-			static allItems = [
-				 {id: 'a', value: 'apple'},
-				 {id: 'o', value: 'orange'},
-				 {id: 'g', value: 'grape'},
-				 {id: 'p', value: 'pear'},
-			]
-			state = {items: []}
-			addItem = () => { 
-				this.setState(({items}) => ({ 
-					items: [ 
-						...items,
-						App.allItems.find( i => !items.includes(i)), 
-					]
-				}))
-			} 
-			removeItem = item => {
-				this.setState(({items}) => 
-					({ items: items.filter(i => i !== item)})) 
-			} 
-			render() { 
-				const {items} = this.state
-				return (
-					<div>
-						<button disabled={ items.length>= App.allItems.length
-							}
-							onClick={this.addItem}
-						>
-							+
-						</button> {items.map((i, index) => (
-						<div key={i.id}>
-							<button onClick={()=> this.removeItem(i)}
-								>
-									-
-								</button> {i.value}:
-							<input />
-						</div>
-						))}
-					</div>
-				) 
-			}
-		}
-		ReactDOM.render(
-			<App />,
-			document.getElementById('root')
-		)
-	</script>
-	<script type="text/babel">
-		class FocusDemo extends React.Component { 
+		class UserCompany extends React.Component { 
 			state = { 
-				items: [ 
-					{id: 'a', value: 'apple'}, 
-					{id: 'o', value: 'orange'}, 
-					{id: 'g', value: 'grape'}, 
-					{id: 'p', value: 'pear'}, 
-				] 
+				company: undefined,
+				loaded: false
 			} 
+			fetchCompany = () => { 
+				axios({ 
+				url: 'https://api.github.com/graphql',
+				method: 'post',
+				data: { 
+					query: `{ 
+						user(login: "${this.props.username}") { 
+							company 
+						} 
+					}`,
+				}, 
+				headers: { 
+					Authorization: `bearer I DELETED THE TOKEN.
+					YOU'LL HAVE TO MAKE YOUR OWN`, 
+				}
+			}).then(response => { 
+				this.setState({
+					loaded: true,
+					company: response.data.data.user.company
+				}) 
+			}, error => { 
+				this.setState({ 
+					error,
+					loaded: true, 
+				}) 
+			})
+			}
 			componentDidMount() { 
-				setInterval(this.randomizeItems, 1000) 
+				this.fetchCompany() 
 			} 
-			randomizeItems = () => { 
-				this.setState(({items}) => ({ 
-					items: shuffle(items)
-					})
-				) 
+			componentDidUpdate(prevProps) { 
+				if ( prevProps.username !== this.props.username) { 
+					this.fetchCompany() 
+				} 
 			} 
 			render() { 
-				return (
-					<div>
-						<div>
-							<h1>Without Key</h1>
-							{this.state.items.map(item => (
-							<input value={item.value} /> ))}
-						</div>
-						<div>
-							<h1>With Key as Index</h1>
-							{this.state.items.map((item, index) => (
-							<input key={index} value={item.value} /> ))}
-						</div>
-						<div>
-							<h1>With Key</h1>
-							{this.state.items.map(item => (
-							<input key={item.id} value={item.value} /> ))}
-						</div>
-					</div>
-				) 
+				return this.state.loaded ? 
+					this.state.error ? 'ERROR (You probably need to add your own token)' 
+					: this.state.company || 'Unknown' : '...' 
+				}
 			} 
-		} 
-		function shuffle(array) { 
-			var currentIndex = array.length, 
-				temporaryValue,
-				randomIndex 
-				
-			// While there remain elements to shuffle... 
-			while (0 !== currentIndex) { 
-				// Pick a remaining element... 
-				randomIndex = Math.floor(
-					Math.random() * currentIndex,
-				) 
-				currentIndex -= 1 
-				
-				// And swap it with the current element. 
-				temporaryValue = array[currentIndex] 
-				array[currentIndex] = array[randomIndex]
-				array[randomIndex] = temporaryValue 
+			class App extends React.Component { 
+				state = {username: undefined}
+				handleSubmit = e => { 
+					e.preventDefault()
+					this.setState({ 
+						username: this.inputNode.value
+					}) 
+				} 
+				render() { 
+					const {username} = this.state 
+					return (
+						<div>
+							<form onSubmit={this.handleSubmit}>
+								<input ref={node=> (this.inputNode = node)} />
+							</form>
+							{username ? (
+							<UserCompany username={username} /> ) : null}
+						</div>
+					) 
+				} 
 			} 
-			return array 
-		} 
-		// ReactDOM.render( 
-		// <FocusDemo />, 
-		// document.getElementById('root'), 
-		// )
+			ReactDOM.render(
+				<App />,
+				document.getElementById('root')
+			)
 	</script>
 </body>
 
